@@ -34,6 +34,7 @@ import android.view.Surface
 import android.view.SurfaceView
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.tensorflow.lite.examples.poseestimation.VisualizationUtils
+import org.tensorflow.lite.examples.poseestimation.PushUpCounter
 import org.tensorflow.lite.examples.poseestimation.YuvToRgbConverter
 import org.tensorflow.lite.examples.poseestimation.data.Person
 import org.tensorflow.lite.examples.poseestimation.ml.MoveNetMultiPose
@@ -265,6 +266,8 @@ class CameraSource(
         // if the model returns only one item, show that item's score.
         if (persons.isNotEmpty()) {
             listener?.onDetectedInfo(persons[0].score, classificationResult)
+            var pup_cnt = PushUpCounter.count(persons.filter { it.score > MIN_CONFIDENCE })
+            listener?.onPushUpCntListener(pup_cnt)
         }
         visualize(persons, bitmap)
     }
@@ -321,6 +324,8 @@ class CameraSource(
 
     interface CameraSourceListener {
         fun onFPSListener(fps: Int)
+
+        fun onPushUpCntListener(count:Int)
 
         fun onDetectedInfo(personScore: Float?, poseLabels: List<Pair<String, Float>>?)
     }

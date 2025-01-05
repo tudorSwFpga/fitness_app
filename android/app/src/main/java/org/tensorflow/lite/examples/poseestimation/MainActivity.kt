@@ -62,6 +62,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var spnDevice: Spinner
     private lateinit var spnModel: Spinner
     private lateinit var spnTracker: Spinner
+    private lateinit var pupProgress : ProgressBar
+    private lateinit var pupText : TextView;
     private lateinit var vTrackerOption: View
     private lateinit var tvClassificationValue1: TextView
     private lateinit var tvClassificationValue2: TextView
@@ -147,17 +149,23 @@ class MainActivity : AppCompatActivity() {
         tvClassificationValue3 = findViewById(R.id.tvClassificationValue3)
         swClassification = findViewById(R.id.swPoseClassification)
         vClassificationOption = findViewById(R.id.vClassificationOption)
+        pupProgress = findViewById(R.id.pushUpProgress)
+        pupText = findViewById(R.id.pup_text)
         initSpinner()
         spnModel.setSelection(modelPos)
         swClassification.setOnCheckedChangeListener(setClassificationListener)
         if (!isCameraPermissionGranted()) {
             requestPermission()
         }
+
     }
 
     override fun onStart() {
         super.onStart()
         openCamera()
+        pupText.visibility=View.VISIBLE;
+        pupProgress.setProgress(9,true)
+        pupProgress.visibility = View.VISIBLE;
     }
 
     override fun onResume() {
@@ -188,12 +196,21 @@ class MainActivity : AppCompatActivity() {
                     CameraSource(surfaceView, object : CameraSource.CameraSourceListener {
                         override fun onFPSListener(fps: Int) {
                             tvFPS.text = getString(R.string.tfe_pe_tv_fps, fps)
+                            pupProgress.setProgress(pupProgress.progress+1)
+                        }
+
+                        override fun onPushUpCntListener(count: Int) {
+                            runOnUiThread{
+                                pupText.text = "Push-up count: $count"
+                            }
+
                         }
 
                         override fun onDetectedInfo(
                             personScore: Float?,
                             poseLabels: List<Pair<String, Float>>?
                         ) {
+
                             tvScore.text = getString(R.string.tfe_pe_tv_score, personScore ?: 0f)
                             poseLabels?.sortedByDescending { it.second }?.let {
                                 tvClassificationValue1.text = getString(

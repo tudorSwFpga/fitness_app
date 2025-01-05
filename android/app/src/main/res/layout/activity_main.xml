@@ -11,22 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="#66000000"
-        app:layout_anchor="@+id/toolbar"
-        app:layout_anchorGravity="center">
-
-        <TextView
-            android:id="@+id/TudorText"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="@null"
-            android:text="Hello world!"
-            android:visibility="visible" />
-    </androidx.appcompat.widget.Toolbar>
-
     <include layout="@layout/bottom_sheet_layout"/>
+    <include layout="@layout/counters"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
